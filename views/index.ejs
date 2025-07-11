@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo List</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>Todo List</h1>
+    </header>
+
+    <main class="main-content">
+      <form class="add-task-form" action="/add" method="POST">
+  <input type="text" name="task" placeholder="Add new task" required />
+  <button type="submit">Add</button>
+</form>
+      <% var alert = typeof alert !== 'undefined' ? alert : null; %>
+
+<% if (error === "empty") { %>
+  <div class="alert">Task cannot be empty!</div>
+<% } %>
+
+<% if (alert === "taskAdded") { %>
+  <div class="alert success">✅ Task added successfully!</div>
+<% } else if (alert === "taskDeleted") { %>
+  <div class="alert success">🗑️ Task deleted successfully!</div>
+<% } else if (alert === "taskUpdated") { %>
+  <div class="alert success">✏️ Task updated successfully!</div>
+<% } %>
+
+
+
+      <ul class="task-list">
+  <% tasks.forEach(task => { %>
+    <li class="task-item">
+      <form action="/delete" method="POST" class="task-action">
+        <input type="hidden" name="taskId" value="<%= task._id %>" />
+        <button type="submit" class="icon-btn" title="Delete Task">
+          <i class="fa-solid fa-trash-can-arrow-up"></i>
+        </button>
+      </form>
+
+      <form action="/edit" method="GET" class="task-action">
+        <input type="hidden" name="taskId" value="<%= task._id %>" />
+        <button type="submit" class="icon-btn" title="Edit Task">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+      </form>
+
+      <% if (String(editTaskId) === String(task._id)) { %>
+        <form action="/edit/<%= task._id %>" method="POST" class="task-form-inline">
+          <input type="text" name="updatedTask" value="<%= taskToEdit.content %>" required class="task-input"/>
+          <button type="submit" class="icon-btn" title="Update Task">
+            <i class="fas fa-check-square"></i>
+          </button>
+        </form>
+      <% } else { %>
+        <span class="task-text"><%= task.content %></span>
+      <% } %>
+    </li>
+  <% }) %>
+</ul>
+
+    </main>
+
+    <footer>
+      &copy; 2025 Todo App
+    </footer>
+  </div>
+</body>
+</html>
